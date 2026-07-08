@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "configurePresets": [
+    {
+      "name": "default",
+      "inherits": "vcpkg",
+      "environment": {
+        "VCPKG_ROOT": "C:\\Users\\86187\\vcpkg"
+      }
+    },
+    {
+      "name": "default-macos",
+      "inherits": "vcpkg-macos",
+      "environment": {
+        "VCPKG_ROOT": "/Users/86187/vcpkg"
+      }
+    }
+  ]
+}

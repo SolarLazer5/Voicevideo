@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+    "curl",
+    "fmt",
+    "libsodium",
+    "minizip",
+    "nlohmann-json",
+    "zlib",
+    "spdlog",
+    "webview2"
+  ]
+}
