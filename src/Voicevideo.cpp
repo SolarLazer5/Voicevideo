@@ -2181,7 +2181,7 @@ namespace {
 
     std::string getBackendBaseUrl()
     {
-        std::string url = "http://127.0.0.1:18080";
+        std::string url = "https://kexueapp.com/voicevideo-backend";
 #ifdef _WIN32
         char buf[512];
         DWORD len = GetEnvironmentVariableA("VOICEVIDEO_BACKEND_URL", buf, sizeof(buf));
