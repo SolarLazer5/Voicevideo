@@ -1,0 +1,45 @@
+--- a/server-playwright.js
++++ b/server-playwright.js
+@@ -8,6 +8,7 @@ const express = require('express');
+ const { chromium } = require('playwright');
+ const fs = require('fs');
+ const path = require('path');
++const os = require('os');
+ 
+ const app = express();
+ const PORT = process.env.PORT || 18062;
+@@ -15,7 +16,7 @@ const PORT = process.env.PORT || 18062;
+ // Cookie 存储路径
+-const COOKIE_PATH = path.join(__dirname, 'cookies.json');
++const COOKIE_PATH = process.env.COOKIES_PATH || path.join(__dirname, 'cookies.json');
+ 
+ // Middleware
+ app.use(express.json());
+@@ -111,21 +112,20 @@ app.get('/api/v1/login/qrcode', async (req, res) => {
+     await page.goto('https://sso.douyin.com/', { waitUntil: 'domcontentloaded' });
+     await sleep(3000);
+ 
+-    // 截图二维码
+-    await page.screenshot({ path: '/tmp/douyin-login-qrcode.png' });
++    // 截图二维码并返回 base64，供前端直接展示
++    const qrcodePath = path.join(os.tmpdir(), 'douyin-login-qrcode.png');
++    await page.screenshot({ path: qrcodePath });
++    const imgBase64 = 'data:image/png;base64,' + fs.readFileSync(qrcodePath).toString('base64');
++    try { fs.unlinkSync(qrcodePath); } catch (e) {}
+ 
+     res.json({
+       success: true,
+       data: {
+-        instructions: [
+-          '1. 打开抖音 App',
+-          '2. 点击右上角扫描图标',
+-          '3. 扫描 /tmp/douyin-login-qrcode.png 中的二维码',
+-          '4. 在手机上确认登录',
+-        ],
++        is_logged_in: false,
++        img: imgBase64,
++        timeout: '4m0s',
+       },
+-      message: '请扫描截图中的二维码',
++      message: '请使用抖音 App 扫码登录',
+     });

@@ -1,0 +1,1 @@
+..\localdep\python\python.exe .\run.py

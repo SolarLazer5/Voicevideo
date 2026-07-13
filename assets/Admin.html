@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>菈泽AI口播 - 激活码管理</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-root">
+        <div class="admin-header" id="adminHeader">
+            <div class="admin-brand">
+                <img class="admin-brand-logo" src="logo/LAZERAGENT_256.png" alt="Logo">
+                <div class="admin-brand-text">
+                    <div class="admin-brand-title">菈泽AI口播</div>
+                    <div class="admin-brand-subtitle">激活码管理后台</div>
+                </div>
+            </div>
+            <button class="admin-close-btn" id="adminCloseBtn" title="关闭">×</button>
+        </div>
+
+        <div class="admin-body">
+            <!-- 密钥校验 -->
+            <div id="keySection" class="admin-panel">
+                <div class="admin-panel-title">管理员验证</div>
+                <p class="admin-panel-desc">请输入管理密钥以生成激活码</p>
+                <input type="password" id="adminKeyInput" class="admin-input" placeholder="管理密钥" autocomplete="off">
+                <div class="admin-error" id="keyError"></div>
+                <button id="keySubmit" class="admin-submit">进入管理后台</button>
+            </div>
+
+            <!-- 主界面 -->
+            <div id="mainSection" class="admin-panel hidden">
+                <div class="admin-panel-title">生成激活码</div>
+
+                <div class="admin-form">
+                    <div class="admin-form-row">
+                        <label class="admin-label">类型</label>
+                        <div class="admin-radio-group">
+                            <label class="admin-radio">
+                                <input type="radio" name="codeType" value="permanent" checked>
+                                <span>永久激活码</span>
+                            </label>
+                            <label class="admin-radio">
+                                <input type="radio" name="codeType" value="trial">
+                                <span>试用激活码</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="admin-form-row" id="trialDaysRow" style="display: none;">
+                        <label class="admin-label" for="trialDaysInput">试用天数</label>
+                        <input type="number" id="trialDaysInput" class="admin-input admin-input-small" value="7" min="1" max="365">
+                    </div>
+
+                    <div class="admin-form-row">
+                        <label class="admin-label" for="countInput">生成数量</label>
+                        <input type="number" id="countInput" class="admin-input admin-input-small" value="1" min="1" max="1000">
+                    </div>
+
+                    <div class="admin-form-row">
+                        <label class="admin-label" for="remarkInput">备注</label>
+                        <input type="text" id="remarkInput" class="admin-input" placeholder="订单号 / 客户信息（可选）" maxlength="128">
+                    </div>
+
+                    <div class="admin-error" id="formError"></div>
+                    <button id="generateBtn" class="admin-submit">生成激活码</button>
+                </div>
+
+                <div id="resultArea" class="admin-result hidden">
+                    <div class="admin-section-title">生成结果</div>
+                    <div class="admin-code-list" id="resultList"></div>
+                    <div class="admin-actions">
+                        <button id="copyAllBtn" class="admin-btn admin-btn-secondary">复制全部</button>
+                        <button id="exportCsvBtn" class="admin-btn admin-btn-secondary">导出 CSV</button>
+                    </div>
+                </div>
+
+                <div class="admin-section-title" style="margin-top: 24px;">查询记录</div>
+
+                <div class="admin-search-bar">
+                    <input type="text" id="adminSearchInput" class="admin-input" placeholder="搜索订单号 / 客户信息 / 兑换码" maxlength="128">
+                    <select id="adminUsedFilter" class="admin-select">
+                        <option value="all">全部状态</option>
+                        <option value="unused">未使用</option>
+                        <option value="used">已使用</option>
+                    </select>
+                    <button id="adminSearchBtn" class="admin-btn admin-btn-secondary">搜索</button>
+                    <button id="adminResetSearchBtn" class="admin-btn admin-btn-secondary">重置</button>
+                </div>
+
+                <div class="admin-pagination-bar">
+                    <span id="adminPaginationInfo">共 0 条</span>
+                    <select id="adminLimitSelect" class="admin-select admin-select-small">
+                        <option value="10">10 条/页</option>
+                        <option value="20" selected>20 条/页</option>
+                        <option value="50">50 条/页</option>
+                        <option value="100">100 条/页</option>
+                    </select>
+                    <button id="adminPrevPage" class="admin-btn admin-btn-secondary">上一页</button>
+                    <button id="adminNextPage" class="admin-btn admin-btn-secondary">下一页</button>
+                </div>
+
+                <div id="recentList" class="admin-recent-list">
+                    <div class="admin-empty">暂无记录</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/admin.js"></script>
+</body>
+</html>

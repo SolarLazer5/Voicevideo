@@ -5,6 +5,7 @@
 #include <fstream>
 #include <atomic>
 #include <spdlog/spdlog.h>
+#include <shlobj.h>
 
 namespace fs = std::filesystem;
 
@@ -553,34 +554,57 @@ void CLarWebview::InjectNativeCallBridge()
     ExecuteScriptW(bridgeJs, nullptr);
 }
 
-BOOL CLarWebview::InitializeWebView2(std::wstring htmlPath)
-{
-    std::wstring userDataFolder;
+namespace {
+    std::string WstringToUtf8(const std::wstring& wstr)
     {
+        if (wstr.empty()) return {};
+        int size = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+        if (size <= 0) return {};
+        std::string result(size - 1, '\0');
+        WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, result.data(), size, nullptr, nullptr);
+        return result;
+    }
+
+    std::wstring GetPersistentWebView2UserDataFolder()
+    {
+        // 优先使用 %LOCALAPPDATA%\Voicevideo\WebView2，保证 localStorage 等数据跨会话持久化
+        PWSTR knownPath = nullptr;
+        if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &knownPath)) && knownPath)
+        {
+            std::wstring folder = std::wstring(knownPath) + L"\\Voicevideo\\WebView2";
+            CoTaskMemFree(knownPath);
+            try {
+                fs::create_directories(folder);
+                return folder;
+            }
+            catch (const std::exception& e) {
+                spdlog::warn("[CLarWebview] Failed to create persistent WebView2 user data dir: {}, path={}",
+                    e.what(), WstringToUtf8(folder));
+            }
+        }
+
+        // 回退到 temp（不再每次清空）
         wchar_t tempPath[MAX_PATH] = {};
         DWORD tempLen = GetTempPathW(MAX_PATH, tempPath);
         if (tempLen > 0 && tempLen < MAX_PATH)
         {
-            static std::atomic<int> s_instanceCounter{ 0 };
-            int instanceId = s_instanceCounter.fetch_add(1);
-            wchar_t buf[MAX_PATH] = {};
-            swprintf_s(buf, L"%sOpenclawLauncher\\WebView2\\Cache_%lu_%d",
-                tempPath, GetCurrentProcessId(), instanceId);
-            userDataFolder = buf;
-
+            std::wstring folder = std::wstring(tempPath) + L"Voicevideo\\WebView2";
             try {
-                fs::path ud(userDataFolder);
-                if (fs::exists(ud))
-                    fs::remove_all(ud);
-                fs::create_directories(ud);
+                fs::create_directories(folder);
+                return folder;
             }
             catch (const std::exception& e) {
-                spdlog::warn("[CLarWebview] Failed to create WebView2 user data dir: {}, path={}",
-                    e.what(), WideToUtf8(userDataFolder));
-                userDataFolder.clear();
+                spdlog::warn("[CLarWebview] Failed to create fallback WebView2 user data dir: {}, path={}",
+                    e.what(), WstringToUtf8(folder));
             }
         }
+        return L"";
     }
+}
+
+BOOL CLarWebview::InitializeWebView2(std::wstring htmlPath)
+{
+    std::wstring userDataFolder = GetPersistentWebView2UserDataFolder();
 
     ComPtr<ICoreWebView2EnvironmentOptions> envOptions;
     {
@@ -589,7 +613,7 @@ BOOL CLarWebview::InitializeWebView2(std::wstring htmlPath)
         if (SUCCEEDED(hrOpt))
         {
             envOptions->put_AdditionalBrowserArguments(
-                L"--disable-cache --disable-gpu-shader-disk-cache --disable-application-cache --media-cache-size=1 --force-device-scale-factor=1 --allow-file-access-from-files");
+                L"--disable-cache --disable-gpu-shader-disk-cache --disable-application-cache --media-cache-size=1 --force-device-scale-factor=1 --allow-file-access-from-files --disable-gpu");
         }
         else
         {
@@ -645,6 +669,29 @@ BOOL CLarWebview::InitializeWebView2(std::wstring htmlPath)
                                     if (!useVirtualHost)
                                     {
                                         spdlog::warn("[CLarWebview] SetVirtualHostNameToFolderMapping failed, hr={:08x}, fallback to NavigateToString", hrMap);
+                                    }
+
+                                    // 额外映射一个媒体虚拟主机，供 https 页面加载项目根目录下的 temp/ 等本地媒体
+                                    try {
+                                        fs::path mediaRoot = fs::path(baseDir).parent_path();
+                                        if (!mediaRoot.empty() && fs::is_directory(mediaRoot))
+                                        {
+                                            HRESULT hrMedia = webView3->SetVirtualHostNameToFolderMapping(
+                                                L"vv-media.local",
+                                                mediaRoot.wstring().c_str(),
+                                                COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND_ALLOW);
+                                            if (FAILED(hrMedia))
+                                            {
+                                                spdlog::warn("[CLarWebview] media host mapping failed, hr={:08x}", hrMedia);
+                                            }
+                                            else
+                                            {
+                                                spdlog::info("[CLarWebview] media host mapped to {}", WideToUtf8(mediaRoot.wstring()));
+                                            }
+                                        }
+                                    }
+                                    catch (...) {
+                                        spdlog::warn("[CLarWebview] media host mapping threw");
                                     }
                                 }
                             }

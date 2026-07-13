@@ -1,0 +1,564 @@
+/* Admin activation code manager styles */
+* {
+    box-sizing: border-box;
+    user-select: none;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 680px;
+    height: 520px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: radial-gradient(ellipse at 50% 0%, #23283d 0%, #171926 60%);
+    color: #ffffff;
+}
+
+.admin-root {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Header */
+.admin-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    background: rgba(0, 0, 0, 0.18);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    -webkit-app-region: drag;
+    app-region: drag;
+    z-index: 10;
+}
+
+.admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-brand-logo {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+    pointer-events: none;
+}
+
+.admin-brand-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.2;
+}
+
+.admin-brand-title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    background: linear-gradient(90deg, #ffffff 0%, #a8b2d1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.admin-brand-subtitle {
+    font-size: 10px;
+    color: #8f96b3;
+    margin-top: 1px;
+}
+
+.admin-close-btn {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+    app-region: no-drag;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.admin-close-btn:hover {
+    background: rgba(248, 113, 113, 0.18);
+    color: #f87171;
+}
+
+/* Body */
+.admin-body {
+    position: absolute;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 24px 32px 28px;
+    overflow-y: auto;
+}
+
+.admin-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.admin-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+}
+
+.admin-panel {
+    width: 100%;
+}
+
+.admin-panel.hidden {
+    display: none;
+}
+
+.admin-panel-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.admin-panel-desc {
+    font-size: 13px;
+    color: #8f96b3;
+    margin: 0 0 18px;
+}
+
+.admin-input {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.22);
+    color: #ffffff;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-input::placeholder {
+    color: #6b7280;
+}
+
+.admin-input:focus {
+    border-color: #6366f1;
+    background: rgba(0, 0, 0, 0.32);
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.35);
+}
+
+.admin-input-small {
+    width: 120px;
+}
+
+.admin-error {
+    min-height: 20px;
+    margin: 8px 0;
+    font-size: 12px;
+    color: #f87171;
+}
+
+.admin-submit {
+    width: 100%;
+    height: 38px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.admin-submit:hover {
+    opacity: 0.92;
+}
+
+.admin-submit:active {
+    transform: scale(0.98);
+}
+
+.admin-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Form */
+.admin-form {
+    padding: 18px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 14px;
+    gap: 12px;
+}
+
+.admin-form-row:last-child {
+    margin-bottom: 0;
+}
+
+.admin-label {
+    width: 80px;
+    font-size: 13px;
+    color: #a8b2d1;
+    flex-shrink: 0;
+}
+
+.admin-radio-group {
+    display: flex;
+    gap: 16px;
+}
+
+.admin-radio {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #e2e8f0;
+    cursor: pointer;
+}
+
+.admin-radio input {
+    accent-color: #6366f1;
+    cursor: pointer;
+}
+
+/* Result area */
+.admin-result {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 12px;
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.admin-result.hidden {
+    display: none;
+}
+
+.admin-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #a5b4fc;
+    margin-bottom: 10px;
+}
+
+.admin-code-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.admin-code-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-code-text {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    color: #ffffff;
+}
+
+.admin-code-meta {
+    font-size: 11px;
+    color: #8f96b3;
+    margin-top: 2px;
+}
+
+.admin-code-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.admin-btn {
+    height: 28px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.admin-btn:hover {
+    opacity: 0.9;
+}
+
+.admin-btn:active {
+    transform: scale(0.97);
+}
+
+.admin-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.admin-btn-success {
+    background: rgba(34, 197, 94, 0.18);
+    color: #4ade80;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Recent list */
+.admin-recent-list {
+    max-height: 120px;
+    overflow-y: auto;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-recent-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.admin-recent-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+}
+
+.admin-recent-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 12px;
+    gap: 10px;
+}
+
+.admin-recent-item:last-child {
+    border-bottom: none;
+}
+
+.admin-recent-main {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.admin-recent-code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    color: #e2e8f0;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+}
+
+.admin-recent-code:hover {
+    color: #a5b4fc;
+}
+
+.admin-recent-info {
+    color: #8f96b3;
+}
+
+.admin-recent-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.admin-recent-status {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+
+.admin-btn-small {
+    height: 22px;
+    padding: 0 8px;
+    font-size: 11px;
+}
+
+.admin-status-used {
+    background: rgba(248, 113, 113, 0.12);
+    color: #f87171;
+}
+
+.admin-status-unused {
+    background: rgba(34, 197, 94, 0.12);
+    color: #4ade80;
+}
+
+.admin-empty {
+    padding: 16px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* Toast */
+.admin-toast {
+    position: fixed;
+    top: 66px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: rgba(34, 197, 94, 0.18);
+    color: #4ade80;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 100;
+}
+
+.admin-toast.show {
+    opacity: 1;
+}
+
+/* Search & pagination */
+.admin-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.admin-search-bar .admin-input {
+    flex: 1;
+    height: 32px;
+    font-size: 12px;
+}
+
+.admin-select {
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.22);
+    color: #ffffff;
+    font-size: 12px;
+    outline: none;
+}
+
+.admin-select option {
+    background: #1f2330;
+    color: #ffffff;
+}
+
+.admin-select-small {
+    width: 90px;
+}
+
+.admin-pagination-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    font-size: 12px;
+    color: #8f96b3;
+}
+
+.admin-pagination-bar .admin-btn {
+    height: 26px;
+    padding: 0 10px;
+}
+
+/* Recent list improvements */
+.admin-recent-list {
+    max-height: 240px;
+    overflow-y: auto;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-recent-header {
+    display: grid;
+    grid-template-columns: 1.6fr 0.9fr 1fr 0.8fr 0.7fr 0.5fr 0.5fr;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.04);
+    font-size: 11px;
+    color: #8f96b3;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-recent-item {
+    display: grid;
+    grid-template-columns: 1.6fr 0.9fr 1fr 0.8fr 0.7fr 0.5fr 0.5fr;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 11px;
+}
+
+.admin-recent-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-recent-code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    color: #e2e8f0;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+}
+
+.admin-recent-code:hover {
+    color: #a5b4fc;
+}
+
+.admin-recent-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.admin-recent-status {
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.admin-status-expired {
+    background: rgba(248, 113, 113, 0.12);
+    color: #f87171;
+}

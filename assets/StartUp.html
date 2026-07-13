@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>菈泽AI口播 - 登录</title>
+    <link rel="stylesheet" href="css/startup.css">
+</head>
+<body>
+    <div class="startup-root">
+        <div class="startup-header" id="startupHeader">
+            <div class="startup-brand">
+                <img class="startup-brand-logo" src="logo/LAZERAGENT_256.png" alt="Logo">
+                <div class="startup-brand-text">
+                    <div class="startup-brand-title">菈泽AI口播</div>
+                    <div class="startup-brand-subtitle">AI 短视频口播创作工具</div>
+                </div>
+            </div>
+            <button class="startup-close-btn" id="startupCloseBtn" title="关闭">×</button>
+        </div>
+
+        <div id="splashPanel" class="startup-splash">
+            <p class="startup-status" id="statusText">正在检查更新…</p>
+            <div class="startup-progress" id="progressBar">
+                <div class="startup-progress-bar"></div>
+            </div>
+        </div>
+
+        <div id="authPanel" class="startup-auth hidden">
+            <div class="auth-title" id="authTitle">登录</div>
+            <input type="text" id="usernameInput" class="auth-input" placeholder="用户名" autocomplete="off" spellcheck="false">
+            <input type="password" id="passwordInput" class="auth-input" placeholder="密码" autocomplete="off">
+            <div class="auth-error" id="authError"></div>
+            <button id="authSubmit" class="auth-submit">登录</button>
+            <div class="auth-toggle">
+                <span id="authToggleText">还没有账号？</span>
+                <a href="#" id="authToggleLink">立即注册</a>
+            </div>
+        </div>
+
+        <div id="activationPanel" class="startup-auth hidden">
+            <div class="auth-title">激活账号</div>
+            <div class="activation-icon">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="9.5" cy="14.5" r="5.5" stroke="url(#keyGrad)" stroke-width="1.6"/>
+                    <path d="M14 10L19 5" stroke="url(#keyGrad)" stroke-width="1.6" stroke-linecap="round"/>
+                    <path d="M16.5 7.5L18.5 5.5L20.5 7.5L18.5 9.5L16.5 7.5Z" stroke="url(#keyGrad)" stroke-width="1.6" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="keyGrad" x1="4" y1="5" x2="20" y2="20" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#6366f1"/>
+                            <stop offset="1" stop-color="#8b5cf6"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <p class="activation-hint">请输入激活码解锁菈泽AI口播全部功能</p>
+            <div class="activation-input-wrap">
+                <input type="text" id="activationCode" class="activation-input" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="auth-error" id="activationError"></div>
+            <button id="activationSubmit" class="auth-submit">激活并启动</button>
+            <div class="activation-footer">
+                <a href="#" id="activationPurchaseLink">购买激活码</a>
+                <span class="activation-divider">·</span>
+                <a href="#" id="activationRetryLink">重新登录</a>
+            </div>
+        </div>
+    </div>
+    <script src="js/startup.js"></script>
+</body>
+</html>
